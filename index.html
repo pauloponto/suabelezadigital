@@ -1404,6 +1404,17 @@
   .menu-prof .menu-seta{color:#E8B4C4;}
   @media (max-width:560px){ .menu-btn{width:40px;height:40px;} .menu-btn span:nth-child(1){top:13px;} .menu-btn span:nth-child(2){top:19px;} .menu-btn span:nth-child(3){top:25px;} }
   @media (prefers-reduced-motion:reduce){ .menu-btn span,.menu-painel{transition:none;} }
+
+  /* Sem foto: monograma dentro de um círculo, em vez de letras gigantes */
+  .card-media{background:linear-gradient(160deg,#F8E9EE 0%,#EDCFD9 100%);}
+  .avatar-fallback{
+    width:104px;height:104px;border-radius:50%;background:#fff;color:var(--rose-deep);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Urbanist',system-ui,sans-serif;font-size:36px;font-weight:600;letter-spacing:.02em;line-height:1;
+    box-shadow:0 0 0 9px rgba(255,255,255,.5),0 18px 34px -16px rgba(122,37,64,.55);
+  }
+  .modal-media{background:linear-gradient(160deg,#F8E9EE 0%,#EDCFD9 100%);}
+  .modal-media .avatar-fallback{width:132px;height:132px;font-size:46px;}
 </style>
 </head>
 <body>

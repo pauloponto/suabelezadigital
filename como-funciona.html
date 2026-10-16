@@ -587,7 +587,7 @@ document.querySelectorAll('.surge').forEach(el => surgir.observe(el));
     {d:'Dia 3'}, {q:'Carol', t:'Procura no Instagram'}, {t:'Já vi uns 40 perfis. Nenhum diz se atende perto de mim', eu:1},
     {d:'Dia 5'}, {t:'Vou no salão do shopping mesmo...', eu:1}
   ];
-  const parado = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const parado = false; // a conversa é a demonstração principal da página: sempre anima
   const wait = ms => new Promise(r => setTimeout(r, ms));
   function criar(m){
     const el = document.createElement('div');

@@ -1003,7 +1003,7 @@ footer .logo{display:inline-block;margin-bottom:8px}
 
 <script>
 (function(){
-  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var reduce = false; // as simulações são o conteúdo da página: sempre animam
   var h=document.getElementById('top');
   window.addEventListener('scroll',function(){h.classList.toggle('scrolled',window.scrollY>8)},{passive:true});
 
