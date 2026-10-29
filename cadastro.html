@@ -243,6 +243,7 @@
     font-size:14.5px;font-weight:500;color:var(--ink);
     transition:border-color .15s ease, background .15s ease;
   }
+  .opcao span .rot-local{font-weight:inherit;}
   .opcao span .icon{width:16px;height:16px;color:var(--teal);}
   .opcao span:hover{border-color:var(--line);}
   .opcao input:checked + span{background:var(--teal-pale);border-color:var(--teal);color:var(--teal-deep);font-weight:600;}
@@ -627,9 +628,9 @@
     <div class="field-group" id="grp-atendimento">
       <label>Como você atende</label>
       <div class="opcoes" role="radiogroup" aria-label="Como você atende">
-        <label class="opcao"><input type="radio" name="atendimento" value="presencial"><span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5 5.5 4h13L20 9.5"/><path d="M4 9.5a2.7 2.7 0 0 0 5.3 0 2.7 2.7 0 0 0 5.4 0 2.7 2.7 0 0 0 5.3 0"/><path d="M5.5 12.5V20h13v-7.5"/><path d="M10 20v-4.5h4V20"/></svg>No espaço</span></label>
-        <label class="opcao"><input type="radio" name="atendimento" value="domicilio"><span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11.5 12 4.5l8 7"/><path d="M6 10v9.5h12V10"/><path d="M10 19.5v-5h4v5"/></svg>A domicílio</span></label>
-        <label class="opcao"><input type="radio" name="atendimento" value="ambos"><span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5 5.5 4h13L20 9.5"/><path d="M4 9.5a2.7 2.7 0 0 0 5.3 0 2.7 2.7 0 0 0 5.4 0 2.7 2.7 0 0 0 5.3 0"/><path d="M5.5 12.5V20h13v-7.5"/><path d="M10 20v-4.5h4V20"/></svg>No espaço e a domicílio</span></label>
+        <label class="opcao"><input type="radio" name="atendimento" value="presencial"><span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5 5.5 4h13L20 9.5"/><path d="M4 9.5a2.7 2.7 0 0 0 5.3 0 2.7 2.7 0 0 0 5.4 0 2.7 2.7 0 0 0 5.3 0"/><path d="M5.5 12.5V20h13v-7.5"/><path d="M10 20v-4.5h4V20"/></svg><b class="rot-local" data-a="presencial">Local</b></span></label>
+        <label class="opcao"><input type="radio" name="atendimento" value="domicilio"><span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11.5 12 4.5l8 7"/><path d="M6 10v9.5h12V10"/><path d="M10 19.5v-5h4v5"/></svg>Domicílio</span></label>
+        <label class="opcao"><input type="radio" name="atendimento" value="ambos"><span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5 5.5 4h13L20 9.5"/><path d="M4 9.5a2.7 2.7 0 0 0 5.3 0 2.7 2.7 0 0 0 5.4 0 2.7 2.7 0 0 0 5.3 0"/><path d="M5.5 12.5V20h13v-7.5"/><path d="M10 20v-4.5h4V20"/></svg><b class="rot-local" data-a="ambos">Local e domicílio</b></span></label>
       </div>
       <div class="hint">Aparece no seu card, para o cliente saber onde pode ser atendido.</div>
       <div class="field-error">Escolha como você atende.</div>
@@ -942,7 +943,23 @@ function validarFormulario(){
 
 const ICONE_CASA = '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11.5 12 4.5l8 7"/><path d="M6 10v9.5h12V10"/><path d="M10 19.5v-5h4v5"/></svg>';
 const ICONE_ESPACO = '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5 5.5 4h13L20 9.5"/><path d="M4 9.5a2.7 2.7 0 0 0 5.3 0 2.7 2.7 0 0 0 5.4 0 2.7 2.7 0 0 0 5.3 0"/><path d="M5.5 12.5V20h13v-7.5"/><path d="M10 20v-4.5h4V20"/></svg>';
-function textoAtendimento(a){ return {presencial:'No espaço', domicilio:'A domicílio', ambos:'No espaço e a domicílio'}[a] || ''; }
+// O nome do local muda conforme a categoria digitada (Salão, Clínica, Estúdio)
+function nomeLocal(cat){
+  const c = (cat || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  if(/cabel|manicure|pedicure|unha|nail|barb/.test(c)) return 'Salão';
+  if(/estet|dermo|depila/.test(c)) return 'Clínica';
+  if(/massa|maqui|make|sobrancel|cilio|lash/.test(c)) return 'Estúdio';
+  return 'Local';
+}
+function textoAtendimento(a, cat){
+  const local = nomeLocal(cat ?? (document.getElementById('categoria') || {}).value);
+  return {presencial:local, domicilio:'Domicílio', ambos:`${local} e domicílio`}[a] || '';
+}
+function atualizarRotulosLocal(){
+  document.querySelectorAll('.rot-local').forEach(el => el.textContent = textoAtendimento(el.dataset.a));
+}
+document.getElementById('categoria').addEventListener('input', atualizarRotulosLocal);
+atualizarRotulosLocal();
 function cidadesUnicas(dados){ return [...new Set(dados.locais.map(l => l.cidade))]; }
 function textoCidades(dados){
   const extras = cidadesUnicas(dados).length - 1;
